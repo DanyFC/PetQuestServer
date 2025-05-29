@@ -18,6 +18,8 @@ pnpm install
 docker compose up -d
 ```
 
+4. Change the name of the .env.template to .env and fill the variables
+
 4. Run the project in dev mode
 ```bash
 pnpm run start:dev
