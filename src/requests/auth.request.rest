@@ -1,0 +1,11 @@
+### create a user
+POST http://localhost:3000/auth
+Content-Type: application/json
+Authorization: bearer token
+
+{
+  "userName": "dante",
+  "email": "dante@gmail.com",
+  "phone": "+51 999 666 333",
+  "password": "thisPasswordIsUnsafe"
+}
