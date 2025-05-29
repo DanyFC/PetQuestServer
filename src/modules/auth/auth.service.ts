@@ -1,16 +1,68 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as bcryptjs from 'bcryptjs';
 import { Model } from 'mongoose';
+import { JwtService } from '@nestjs/jwt';
 
 import { CreateUserDto } from './dto/create-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
 import { User } from './entities/user.entity';
+import { UserResponse } from './interfaces/userResponse.interface';
+import { AuthenticatedResponse } from './interfaces/authenticatedResponse.interface';
+
+export interface JwtPayload {
+  id: string;
+  iat?: number;
+  exp?: number;
+}
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel(User.name) private user: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private user: Model<User>,
+    private jwtService: JwtService,
+  ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const newUser = new this.user(createUserDto);
-    return newUser.save();
+  async create(createUserDto: CreateUserDto): Promise<UserResponse> {
+    try {
+      const { password, ...userData } = createUserDto;
+      const newUser = new this.user({
+        ...userData,
+        password: bcryptjs.hashSync(password, 10),
+      });
+
+      return newUser.save();
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (err.code === 11000)
+        throw new UnauthorizedException(
+          `${createUserDto.email} already exists`,
+        );
+      throw new UnauthorizedException('Something went wrong');
+    }
+  }
+
+  async login(loginUserDto: LoginUserDto): Promise<AuthenticatedResponse> {
+    const { email, password } = loginUserDto;
+    const userDb = await this.user.findOne({ email });
+    if (!userDb) throw new UnauthorizedException('User not found!');
+
+    if (!bcryptjs.compareSync(password, userDb.password))
+      throw new UnauthorizedException('Invalid credentials!');
+
+    if (!userDb.isActive) throw new UnauthorizedException('User not active!');
+
+    const user: UserResponse = userDb.toJSON();
+
+    return {
+      user,
+      token: await this.getJwtToken({
+        id: user.id!,
+      }),
+    };
+  }
+
+  getJwtToken(payload: JwtPayload): Promise<string> {
+    return this.jwtService.signAsync(payload);
   }
 }
