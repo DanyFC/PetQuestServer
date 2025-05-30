@@ -1,13 +1,22 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({
+  versionKey: false,
   toJSON: {
     transform: (doc, ret) => {
       // eslint-disable-next-line
-      ret.id = ret._id.toString();
-      delete ret._id;
+      ret.id = ret._id;
       delete ret.__v;
-      delete ret.password;
+      delete ret._id;
+      return ret;
+    },
+  },
+  toObject: {
+    transform: (doc, ret) => {
+      // eslint-disable-next-line
+      ret.id = ret._id;
+      delete ret.__v;
+      delete ret._id;
       return ret;
     },
   },

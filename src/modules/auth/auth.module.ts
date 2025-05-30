@@ -6,10 +6,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserSchema } from './entities/user.entity';
+import { AuthGuard } from './guards/auth.guard';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, AuthGuard],
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
@@ -19,5 +20,6 @@ import { UserSchema } from './entities/user.entity';
       signOptions: { expiresIn: '24h' },
     }),
   ],
+  exports: [AuthService, AuthGuard],
 })
 export class AuthModule {}
