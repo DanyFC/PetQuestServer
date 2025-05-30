@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
 
 @Schema({
   versionKey: false,
@@ -37,11 +38,17 @@ export class User {
   @Prop({ default: new Date() })
   createdAt: Date;
 
-  @Prop({ type: [String], default: [] })
-  published: string[];
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quest' }],
+    default: [],
+  })
+  published: mongoose.Types.ObjectId[];
 
-  @Prop({ type: [String], default: [] })
-  commented: string[];
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Update' }],
+    default: [],
+  })
+  commented: mongoose.Types.ObjectId[];
 
   @Prop({ default: true })
   isActive: boolean;

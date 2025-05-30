@@ -1,0 +1,53 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4M2EyYzU1NmNmYmYxMTc3MGQwZThlZiIsImlhdCI6MTc0ODY0NDM3OSwiZXhwIjoxNzQ4NzMwNzc5fQ.8k2OLaVcZ9bPJ2zfSD3KYr8HenYnvtHrU0Ur7aU3vMc
+@questId = 683a351ca52374fc2334be09
+
+### GET REQUESTS
+### get all the quests
+GET http://localhost:3000/quest
+
+### get all my quests
+GET http://localhost:3000/quest/own-quests
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### get all my updated quests
+GET http://localhost:3000/quest/own-quests-updates
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### get details of a quest
+GET http://localhost:3000/quest/{{questId}}
+Content-Type: application/json
+
+### POST REQUESTS
+### create a quest
+POST http://localhost:3000/quest
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "characteristics": ["negra", "valiente"], 
+  "direction": "Norte",
+  "gender": "Femenino",
+  "health": [],
+  "image": "founded.webp",
+  "name": "Luna",
+  "race": ["salchicha", "alemán"],
+  "story": "Se perdió en el bosque.",
+  "trained": true,
+  "type": "Perro",
+  "lostDate": "2024-03-10T12:00:00Z",
+  "placeOfLost": "Afueras de la ciudad"
+}
+
+### create a update
+POST http://localhost:3000/quest/update
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "dateUpdate": "2024-06-01T14:30:00Z",
+  "descriptionUpdate": "Se escapó durante un paseo.",
+  "placeUpdate": "Parque Central",
+  "quest": "{{questId}}"
+}

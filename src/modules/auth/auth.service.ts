@@ -26,7 +26,9 @@ export class AuthService {
         password: bcryptjs.hashSync(password, 10),
       });
 
-      return newUser.save();
+      const savedUser = await newUser.save();
+
+      return savedUser as unknown as UserResponse;
     } catch (err) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (err.code === 11000)
@@ -47,12 +49,11 @@ export class AuthService {
 
     if (!userDb.isActive) throw new UnauthorizedException('User not active!');
 
-    const user: UserResponse = userDb.toJSON();
-
     return {
-      user,
+      user: userDb as unknown as UserResponse,
       token: await this.getJwtToken({
-        id: user.id!,
+        // eslint-disable-next-line
+        id: userDb.id,
       }),
     };
   }
@@ -60,7 +61,7 @@ export class AuthService {
   // INFO: utils
   async findUserById(id: string): Promise<UserResponse> {
     const user = await this.user.findOne({ _id: id });
-    return user?.toJSON() as UserResponse;
+    return user as unknown as UserResponse;
   }
 
   getJwtToken(payload: JwtPayload): Promise<string> {
