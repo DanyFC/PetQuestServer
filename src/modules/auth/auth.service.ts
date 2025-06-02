@@ -18,7 +18,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<UserResponse> {
+  async create(createUserDto: CreateUserDto): Promise<any> {
     try {
       const { password, ...userData } = createUserDto;
       const newUser = new this.user({
@@ -28,7 +28,14 @@ export class AuthService {
 
       const savedUser = await newUser.save();
 
-      return savedUser as unknown as UserResponse;
+      const token = await this.getJwtToken({
+        id: (savedUser as unknown as UserResponse).id!,
+      });
+
+      return {
+        user: savedUser as unknown as UserResponse,
+        token,
+      };
     } catch (err) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (err.code === 11000)
