@@ -4,11 +4,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as bcryptjs from 'bcryptjs';
 import { Model } from 'mongoose';
 
-import { JwtPayload } from './interfaces/jwtPayload.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { User } from './entities/user.entity';
 import { AuthenticatedResponse } from './interfaces/authenticatedResponse.interface';
+import { JwtPayload } from './interfaces/jwtPayload.interface';
 import { UserResponse } from './interfaces/userResponse.interface';
 
 @Injectable()
@@ -61,6 +61,15 @@ export class AuthService {
       token: await this.getJwtToken({
         // eslint-disable-next-line
         id: userDb.id,
+      }),
+    };
+  }
+
+  async revalidate(user: UserResponse): Promise<AuthenticatedResponse> {
+    return {
+      user,
+      token: await this.getJwtToken({
+        id: user.id!,
       }),
     };
   }
