@@ -24,13 +24,13 @@ import mongoose from 'mongoose';
 })
 export class Update {
   @Prop({ required: true, default: Date.now })
-  dateUpdate: Date;
+  date: Date;
 
   @Prop({ required: true })
-  descriptionUpdate: string;
+  description: string;
 
   @Prop({ required: true })
-  placeUpdate: string;
+  place: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Quest' })
   quest: mongoose.Types.ObjectId;

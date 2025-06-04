@@ -3,15 +3,15 @@ import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 export class CreateUpdateDto {
   @IsDateString()
   @IsNotEmpty()
-  dateUpdate: Date;
+  date: Date;
 
   @IsNotEmpty()
   @IsString()
-  descriptionUpdate: string;
+  description: string;
 
   @IsNotEmpty()
   @IsString()
-  placeUpdate: string;
+  place: string;
 
   @IsNotEmpty()
   @IsString()

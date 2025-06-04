@@ -49,6 +49,9 @@ export class QuestService {
       .populate('published')
       .select('published');
 
+    // eslint-disable-next-line
+    quests?.published.sort((a: any, b: any) => b.lostDate - a.lostDate);
+
     if (!quests) throw new BadRequestException('User not found');
 
     return quests.published as unknown as QuestResponse[];
@@ -65,7 +68,7 @@ export class QuestService {
     // eslint-disable-next-line
     const quests = updates.commented.map((update: any) => update.quest);
 
-    return quests as QuestResponse[];
+    return [...new Set(quests)] as unknown as QuestResponse[];
   }
 
   async createUpdate(
@@ -104,6 +107,9 @@ export class QuestService {
       .populate({ path: 'record', populate: { path: 'user' } });
 
     if (!quest) throw new BadRequestException('Quest not found');
+
+    // eslint-disable-next-line
+    quest.record.sort((a: any, b: any) => b.date - a.date);
 
     return quest as unknown as QuestResponse;
   }

@@ -1,5 +1,5 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4M2EyYzU1NmNmYmYxMTc3MGQwZThlZiIsImlhdCI6MTc0ODY0NDM3OSwiZXhwIjoxNzQ4NzMwNzc5fQ.8k2OLaVcZ9bPJ2zfSD3KYr8HenYnvtHrU0Ur7aU3vMc
-@questId = 683a351ca52374fc2334be09
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDBiZmJiZmM0ZDZjZDg4MzQyYWNlOCIsImlhdCI6MTc0OTA3Mzg1MSwiZXhwIjoxNzQ5MTYwMjUxfQ.HYi2rbz872Mz1ajoSI_v1FfSUlAM0NG6IbuYo9R8OgU
+@questId = 6840b30dfc4d6cd88342abe8
 
 ### GET REQUESTS
 ### get all the quests
@@ -46,8 +46,8 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "dateUpdate": "2024-06-01T14:30:00Z",
-  "descriptionUpdate": "Se escapó durante un paseo.",
-  "placeUpdate": "Parque Central",
+  "date": "2025-06-04T18:30:00Z",
+  "description": "Vi un salchicha sin correa, parecia perdido en la estación de trenes de la ciudad.",
+  "place": "Estación de trenes",
   "quest": "{{questId}}"
 }
