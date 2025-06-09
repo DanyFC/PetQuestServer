@@ -1,5 +1,6 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDBiZmJiZmM0ZDZjZDg4MzQyYWNlOCIsImlhdCI6MTc0OTA3Mzg1MSwiZXhwIjoxNzQ5MTYwMjUxfQ.HYi2rbz872Mz1ajoSI_v1FfSUlAM0NG6IbuYo9R8OgU
-@questId = 6840b30dfc4d6cd88342abe8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDcwMWJjNTM0ZWVmZWUxOTczY2I1MyIsImlhdCI6MTc0OTQ4Mzk3NSwiZXhwIjoxNzQ5NTcwMzc1fQ.wNJzKGNDgUtEUfPjZFyjFt7ymqUf7XI3pC5RYS6ooyo
+@questId = 684702883f971b5933145da3
+@updateId= 684702a43f971b5933145db1
 
 ### GET REQUESTS
 ### get all the quests
@@ -26,18 +27,37 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "characteristics": ["negra", "valiente"], 
-  "direction": "Norte",
+  "characteristics": ["orejas negras", "mancha blanca en la cabeza"], 
+  "direction": "av. siempre viva",
   "gender": "Femenino",
   "health": [],
-  "image": "founded.webp",
-  "name": "Luna",
-  "race": ["salchicha", "alemán"],
-  "story": "Se perdió en el bosque.",
+  "image": "lost.webp",
+  "name": "luna",
+  "race": ["persa", "mestiza"],
+  "story": "paseaba con mi gata por el parque al medio día cuando de pronto se perdió en el bosque.",
+  "trained": false,
+  "type": "Gato",
+  "lostDate": "2025-06-09T12:30:00Z",
+  "placeOfLost": "en el parque central en el lado oeste"
+}
+
+### update a quest
+PATCH http://localhost:3000/quest
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": "{{questId}}",
+  "characteristics": ["orejas negras", "mancha blanca en la cabeza", "collar rojo"], 
+  "direction": "av. siempre viva L-15",
+  "gender": "Femenino",
+  "health": ["necesita medicación"],
+  "name": "luna",
+  "race": ["persa", "mestiza"],
+  "story": "paseaba con mi gata por el parque al medio día cuando de pronto se perdió en el bosque.",
   "trained": true,
-  "type": "Perro",
-  "lostDate": "2024-03-10T12:00:00Z",
-  "placeOfLost": "Afueras de la ciudad"
+  "lostDate": "2025-06-09T12:35:00Z",
+  "placeOfLost": "en el parque central en el lado oeste por la pileta."
 }
 
 ### create a update
@@ -46,8 +66,20 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "date": "2025-06-04T18:30:00Z",
-  "description": "Vi un salchicha sin correa, parecia perdido en la estación de trenes de la ciudad.",
-  "place": "Estación de trenes",
+  "date": "2025-06-09T18:30:00Z",
+  "description": "vi a una gata acorde a la descripción cerca a la pileta del parque.",
+  "place": "parque central en el lado oeste, junto al puesto de venta",
   "quest": "{{questId}}"
+}
+
+### upgrade a update
+PATCH http://localhost:3000/quest/update
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "id": "{{updateId}}",
+  "date": "2025-06-09T18:35:00Z",
+  "description": "vi a una gata acorde a la descripción cerca a la pileta del parque, no tenía un collar rojo.",
+  "place": "parque central en el lado oeste, junto al puesto de venta de globos"
 }

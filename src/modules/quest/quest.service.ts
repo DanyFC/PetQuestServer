@@ -2,13 +2,15 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
+import { User } from '../auth/entities/user.entity';
 import { CreateQuestDto } from './dto/create-quest.dto';
 import { CreateUpdateDto } from './dto/create-update.dto';
+import { UpdateQuestDto } from './dto/update-quest.dto';
+import { UpgradeUpdateDto } from './dto/upgrade-update.dto';
 import { Quest } from './entities/quest.entity';
 import { Update } from './entities/update.entity';
 import { QuestResponse } from './interfaces/quest-response.interface';
 import { UpdateResponse } from './interfaces/update-response.interface';
-import { User } from '../auth/entities/user.entity';
 
 @Injectable()
 export class QuestService {
@@ -20,6 +22,34 @@ export class QuestService {
 
   async findAllQuests(): Promise<QuestResponse[]> {
     return this.quest.find();
+  }
+
+  async findUserQuests(userId: string): Promise<QuestResponse[]> {
+    const quests = await this.user
+      .findById(userId)
+      .populate('published')
+      .select('published');
+
+    if (!quests) throw new BadRequestException('User not found');
+
+    // eslint-disable-next-line
+    quests?.published.sort((a: any, b: any) => b.lostDate - a.lostDate);
+
+    return quests.published as unknown as QuestResponse[];
+  }
+
+  async findUpdatedQuestsByUser(userId: string): Promise<QuestResponse[]> {
+    const updates = await this.user
+      .findById(userId)
+      .populate({ path: 'commented', populate: { path: 'quest' } })
+      .select('commented');
+
+    if (!updates) throw new BadRequestException('User not found');
+
+    // eslint-disable-next-line
+    const quests = updates.commented.map((update: any) => update.quest);
+
+    return [...new Set(quests)] as unknown as QuestResponse[];
   }
 
   async createQuest(
@@ -43,32 +73,30 @@ export class QuestService {
     }
   }
 
-  async findUserQuests(userId: string): Promise<QuestResponse[]> {
-    const quests = await this.user
-      .findById(userId)
-      .populate('published')
-      .select('published');
+  async updateQuest(
+    updateQuestDto: UpdateQuestDto,
+    userId: string,
+  ): Promise<QuestResponse> {
+    try {
+      const user = await this.user.findById(userId);
+      if (!user) throw new BadRequestException('User not found');
 
-    // eslint-disable-next-line
-    quests?.published.sort((a: any, b: any) => b.lostDate - a.lostDate);
+      const quest = await this.quest.findById(updateQuestDto.id);
+      if (!quest) throw new BadRequestException('Quest not found');
 
-    if (!quests) throw new BadRequestException('User not found');
+      if (user.id !== quest.user.toString())
+        throw new BadRequestException('You are not the owner of this quest');
 
-    return quests.published as unknown as QuestResponse[];
-  }
+      const updatedQuest = await this.quest.findByIdAndUpdate<QuestResponse>(
+        quest.id,
+        updateQuestDto,
+        { new: true },
+      );
 
-  async findUpdatedQuestsByUser(userId: string): Promise<QuestResponse[]> {
-    const updates = await this.user
-      .findById(userId)
-      .populate({ path: 'commented', populate: { path: 'quest' } })
-      .select('commented');
-
-    if (!updates) throw new BadRequestException('User not found');
-
-    // eslint-disable-next-line
-    const quests = updates.commented.map((update: any) => update.quest);
-
-    return [...new Set(quests)] as unknown as QuestResponse[];
+      return updatedQuest!;
+    } catch {
+      throw new BadRequestException();
+    }
   }
 
   async createUpdate(
@@ -96,6 +124,32 @@ export class QuestService {
       await user.save();
 
       return savedUpdate as unknown as UpdateResponse;
+    } catch {
+      throw new BadRequestException();
+    }
+  }
+
+  async upgradeUpdate(
+    upgradeUpdateDto: UpgradeUpdateDto,
+    userId: string,
+  ): Promise<UpdateResponse> {
+    try {
+      const user = await this.user.findById(userId);
+      if (!user) throw new BadRequestException('User not found');
+
+      const update = await this.update.findById(upgradeUpdateDto.id);
+      if (!update) throw new BadRequestException('Update not found');
+
+      if (user.id !== update.user.toString())
+        throw new BadRequestException('You are not the owner of this update');
+
+      const savedUpdate = await this.update.findByIdAndUpdate<UpdateResponse>(
+        update.id,
+        upgradeUpdateDto,
+        { new: true },
+      );
+
+      return savedUpdate!;
     } catch {
       throw new BadRequestException();
     }

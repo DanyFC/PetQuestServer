@@ -3,16 +3,19 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Post,
   Request,
   UseGuards,
 } from '@nestjs/common';
 
 import { AuthGuard } from '../auth/guards/auth.guard';
-import { CreateQuestDto } from './dto/create-quest.dto';
-import { QuestService } from './quest.service';
 import { UserResponse } from '../auth/interfaces/userResponse.interface';
+import { CreateQuestDto } from './dto/create-quest.dto';
 import { CreateUpdateDto } from './dto/create-update.dto';
+import { UpdateQuestDto } from './dto/update-quest.dto';
+import { UpgradeUpdateDto } from './dto/upgrade-update.dto';
+import { QuestService } from './quest.service';
 
 @Controller('quest')
 export class QuestController {
@@ -21,15 +24,6 @@ export class QuestController {
   @Get()
   findAllQuests() {
     return this.questService.findAllQuests();
-  }
-
-  @UseGuards(AuthGuard)
-  @Post()
-  createQuest(@Body() createQuestDto: CreateQuestDto, @Request() req: Request) {
-    return this.questService.createQuest(
-      createQuestDto,
-      (req['user'] as UserResponse).id!,
-    );
   }
 
   @UseGuards(AuthGuard)
@@ -47,10 +41,40 @@ export class QuestController {
   }
 
   @UseGuards(AuthGuard)
+  @Post()
+  createQuest(@Body() createQuestDto: CreateQuestDto, @Request() req: Request) {
+    return this.questService.createQuest(
+      createQuestDto,
+      (req['user'] as UserResponse).id!,
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch()
+  updateQuest(@Body() updateQuestDto: UpdateQuestDto, @Request() req: Request) {
+    return this.questService.updateQuest(
+      updateQuestDto,
+      (req['user'] as UserResponse).id!,
+    );
+  }
+
+  @UseGuards(AuthGuard)
   @Post('/update')
   createUpdate(@Body() createUpdate: CreateUpdateDto, @Request() req: Request) {
     return this.questService.createUpdate(
       createUpdate,
+      (req['user'] as UserResponse).id!,
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch('/update')
+  upgradeUpdate(
+    @Body() upgradeUpdateDto: UpgradeUpdateDto,
+    @Request() req: Request,
+  ) {
+    return this.questService.upgradeUpdate(
+      upgradeUpdateDto,
       (req['user'] as UserResponse).id!,
     );
   }

@@ -1,12 +1,14 @@
+@token = 
+
 ### create a user
 POST http://localhost:3000/auth
 Content-Type: application/json
 
 {
-  "userName": "dante",
-  "email": "dante@gmail.com",
+  "userName": "test",
+  "email": "test@test.com",
   "phone": "+51 999 666 333",
-  "password": "dante123"
+  "password": "123456"
 }
 
 ### login a user
@@ -14,11 +16,12 @@ POST http://localhost:3000/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "dante@gmail.com",
-  "password": "dante123"
+  "email": "test@test.com",
+  "password": "123456"
 }
+
 
 ### revalidate a user
 GET http://localhost:3000/auth/revalidate
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4M2YwMjdjODc4NGJkMDU0MzhlNzc5MCIsImlhdCI6MTc0ODk1OTg2OCwiZXhwIjoxNzQ5MDQ2MjY4fQ.u2QyPXzK12JkpiXfKVS74KAvE57cWHzi7KOCQlzSp6M
+Authorization: Bearer {{token}}
