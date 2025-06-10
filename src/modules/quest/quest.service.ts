@@ -20,8 +20,19 @@ export class QuestService {
     @InjectModel(User.name) private user: Model<User>,
   ) {}
 
-  async findAllQuests(): Promise<QuestResponse[]> {
-    return this.quest.find();
+  async findQuests(
+    page: number = 0,
+    limit: number = 6,
+    status: 'pending' | 'completed' = 'pending',
+  ): Promise<QuestResponse[]> {
+    const quests = await this.quest
+      .find<QuestResponse>({ foundedDate: { $exists: status === 'completed' } })
+      .sort({ lostDate: -1 })
+      .skip(limit * (page - 1))
+      .limit(limit);
+
+    console.log('🔥 🔜 quest.service.ts 🔜 quests:', quests);
+    return quests;
   }
 
   async findUserQuests(userId: string): Promise<QuestResponse[]> {
@@ -114,6 +125,7 @@ export class QuestService {
       if (!quest) throw new BadRequestException('Quest not found');
 
       quest.record.push(savedUpdate.id);
+      quest.lastSeen = savedUpdate.date;
       await quest.save();
 
       const user = await this.user.findById(userId);

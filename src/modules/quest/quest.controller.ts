@@ -5,6 +5,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -22,8 +23,12 @@ export class QuestController {
   constructor(private readonly questService: QuestService) {}
 
   @Get()
-  findAllQuests() {
-    return this.questService.findAllQuests();
+  findQuests(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+    @Query('status') status: 'pending' | 'completed',
+  ) {
+    return this.questService.findQuests(page, limit, status);
   }
 
   @UseGuards(AuthGuard)
