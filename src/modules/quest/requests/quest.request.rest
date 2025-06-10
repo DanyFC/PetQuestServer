@@ -4,7 +4,7 @@
 
 ### GET REQUESTS
 ### get all the quests
-GET http://localhost:3000/quest
+GET http://localhost:3000/quest?page=1&limit=6&status=pending
 
 ### get all my quests
 GET http://localhost:3000/quest/own-quests
@@ -57,6 +57,7 @@ Authorization: Bearer {{token}}
   "story": "paseaba con mi gata por el parque al medio día cuando de pronto se perdió en el bosque.",
   "trained": true,
   "lostDate": "2025-06-09T12:35:00Z",
+  "foundedDate": "2025-06-09T12:30:00Z",
   "placeOfLost": "en el parque central en el lado oeste por la pileta."
 }
 

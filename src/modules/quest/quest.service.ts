@@ -31,7 +31,6 @@ export class QuestService {
       .skip(limit * (page - 1))
       .limit(limit);
 
-    console.log('🔥 🔜 quest.service.ts 🔜 quests:', quests);
     return quests;
   }
 
