@@ -1,10 +1,11 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDcwMWJjNTM0ZWVmZWUxOTczY2I1MyIsImlhdCI6MTc0OTQ4Mzk3NSwiZXhwIjoxNzQ5NTcwMzc1fQ.wNJzKGNDgUtEUfPjZFyjFt7ymqUf7XI3pC5RYS6ooyo
-@questId = 684702883f971b5933145da3
-@updateId= 684702a43f971b5933145db1
+@token = 
+@questId = 
+@updateId= 
+@now = 
 
 ### GET REQUESTS
-### get all the quests
-GET http://localhost:3000/quest?page=1&limit=6&status=pending
+### get quests
+GET http://localhost:3000/quest?page=1&limit=6&status=completed&name=lu&sort=asc
 
 ### get all my quests
 GET http://localhost:3000/quest/own-quests
@@ -32,12 +33,12 @@ Authorization: Bearer {{token}}
   "gender": "Femenino",
   "health": [],
   "image": "lost.webp",
-  "name": "luna",
+  "name": "pimienta",
   "race": ["persa", "mestiza"],
   "story": "paseaba con mi gata por el parque al medio día cuando de pronto se perdió en el bosque.",
   "trained": false,
   "type": "Gato",
-  "lostDate": "2025-06-09T12:30:00Z",
+  "lostDate": "{{now}}",
   "placeOfLost": "en el parque central en el lado oeste"
 }
 

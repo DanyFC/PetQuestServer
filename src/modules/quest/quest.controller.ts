@@ -24,11 +24,13 @@ export class QuestController {
 
   @Get()
   findQuests(
-    @Query('page') page: number,
     @Query('limit') limit: number,
+    @Query('name') name: string,
+    @Query('page') page: number,
+    @Query('sort') sort: 'asc' | 'desc',
     @Query('status') status: 'pending' | 'completed',
   ) {
-    return this.questService.findQuests(page, limit, status);
+    return this.questService.findQuests(limit, name, page, sort, status);
   }
 
   @UseGuards(AuthGuard)

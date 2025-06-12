@@ -21,14 +21,19 @@ export class QuestService {
   ) {}
 
   async findQuests(
-    page: number = 0,
     limit: number = 6,
+    name: string = '',
+    page: number = 0,
+    sort: 'asc' | 'desc' = 'desc',
     status: 'pending' | 'completed' = 'pending',
   ): Promise<QuestResponse[]> {
     const quests = await this.quest
-      .find<QuestResponse>({ foundedDate: { $exists: status === 'completed' } })
-      .sort({ lostDate: -1 })
-      .skip(limit * (page - 1))
+      .find<QuestResponse>({
+        foundedDate: { $exists: status === 'completed' },
+        name: { $regex: name, $options: 'i' },
+      })
+      .sort({ lostDate: sort === 'asc' ? 1 : -1 })
+      .skip(page > 0 ? limit * (page - 1) : 0)
       .limit(limit);
 
     return quests;
@@ -58,6 +63,8 @@ export class QuestService {
 
     // eslint-disable-next-line
     const quests = updates.commented.map((update: any) => update.quest);
+    // eslint-disable-next-line
+    quests.sort((a: any, b: any) => b.lastSeen - a.lastSeen);
 
     return [...new Set(quests)] as unknown as QuestResponse[];
   }
