@@ -6,21 +6,25 @@
 git clone https://github.com/DanyFC/PetQuestServer
 ```
 
-3. Install the dependencies
+2. Install the dependencies
 ```bash
 pnpm install
 ```
 
 3. Run the docker engine (you need to have it installed)
 
-3. Run the command to raise the database
+4. Run the command to raise the database
 ```bash
 docker compose up -d
 ```
 
-4. Change the name of the .env.template to .env and fill the variables
+5. Change the name of the .env.template to .env and fill the variables
 
-4. Run the project in dev mode
+6. Run the project in dev mode
 ```bash
 pnpm run start:dev
 ```
+
+To interact with the API, you can use the requests in the folder `requests` or you can use a tool like Postman.
+
+To see the documentation of the API, you can access it at http://localhost:3000/docs when the project is running in dev mode.
