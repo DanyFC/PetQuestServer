@@ -23,6 +23,7 @@ export class QuestService {
   async findQuests(
     limit: number = 6,
     name: string = '',
+    orderBy: string = 'lostDate',
     page: number = 0,
     sort: 'asc' | 'desc' = 'desc',
     status: 'pending' | 'completed' = 'pending',
@@ -32,7 +33,7 @@ export class QuestService {
         foundedDate: { $exists: status === 'completed' },
         name: { $regex: name, $options: 'i' },
       })
-      .sort({ lostDate: sort === 'asc' ? 1 : -1 })
+      .sort({ [orderBy]: sort === 'asc' ? 1 : -1 })
       .skip(page > 0 ? limit * (page - 1) : 0)
       .limit(limit);
 

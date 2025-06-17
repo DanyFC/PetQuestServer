@@ -5,7 +5,7 @@
 
 ### GET REQUESTS
 ### get quests
-GET http://localhost:3000/quest?page=1&limit=6&status=completed&name=lu&sort=asc
+GET http://localhost:3000/quest?page=1&limit=6&status=completed&orderBy=foundedDate&sort=desc
 
 ### get all my quests
 GET http://localhost:3000/quest/own-quests
